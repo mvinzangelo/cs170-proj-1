@@ -19,13 +19,14 @@ class Eight_Puzzle_Problem:
     
 def general_search(problem, queueing_function):
     # nodes = make_queue(make_node(problem.initial_state))
+    nodes = [Node(problem.initial_state)]
     # loop do
     #       if nodes is empty then return failure
     #   node = remove_front(nodes) 
     #       if problem.goal_test(node.state)
     #   nodes = queuing_function(nodes, EXPAND((problem.OPERATORS))
     # end
-    print(problem.goal_test([[1,2,2],[4,5,6],[7,8,0]]))
+    print(nodes[0].val)
     
 
 
