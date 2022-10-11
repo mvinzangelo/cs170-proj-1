@@ -1,3 +1,4 @@
+import copy
 # KEY POINTS: 
 # - make sure to keep code general (can solve multiple n's for 8 puzzle)
 # - make can put any inital state
@@ -42,15 +43,39 @@ class Eight_Puzzle_Problem:
     def goal_test(self, sample):
         return sample.state == self.goal_state.state
 
+def move_zero(node, x_addition, y_addition):
+    # create a deep copy of the input node
+    new_board = copy.deepcopy(node)
+    # store the previous x and y value
+    old_x = new_board.zero["x"]
+    old_y = new_board.zero["y"]
+    # move the x and y value of the new board
+    new_board.zero["x"] += x_addition
+    new_board.zero["y"] += y_addition
+    # swap move the zero towards the new direction
+    new_board.state[old_y][old_x] = new_board.state[new_board.zero["y"]][new_board.zero["x"]]
+    new_board.state[new_board.zero["y"]][new_board.zero["x"]] = 0
+    return new_board
+
+
 def expand(node, operators):
+    # store which operators to expand on
     instructions = []
+    # store the list of nodes to be enqueued
     node_list = []
+    # create the list of viable operators
     for func in operators:
         instructions.append(func(operators, node.val))
 
-    # if instructions[0]:
-        
-        
+    print(node.val.state)
+    if instructions[0]:
+        move_zero(node.val, 0, -1)
+    if instructions[1]:
+        move_zero(node.val, 0, 1)
+    if instructions[2]:
+        move_zero(node.val, -1, 0)
+    if instructions[3]:
+        move_zero(node.val, 1, 0)
 
 # def uniform_cost_search(nodes, expand_function)
 
