@@ -10,15 +10,15 @@ class Board:
         self.n = 3
 
 class Node:
-    def __init__(self, val):
+    def __init__(self, val, depth = 0):
         self.val = val
+        self.depth = depth
         self.children = []
 
 class Eight_Puzzle_Problem: 
-    # initial_state = Board([[1,2,3],[4,0,5],[6,7,8]], {"x": 1, "y": 1})
-    initial_state = Board([[1,2,3],[5,0,6],[4,7,8]], {"x": 1, "y": 1})
-    # initial_state = Board([[1,2,3],[4,5,6],[7,0,8]], {"x": 1, "y": 2})
     # initial_state = Board([[1,2,3],[4,5,6],[0,7,8]], {"x": 0, "y": 2})
+    # initial_state = Board([[1,3,6],[5,0,2],[4,7,8]], {"x": 1, "y": 1})
+    initial_state = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
     goal_state = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
 
     # operators
@@ -73,19 +73,19 @@ def expand(node, operators):
 
     # add viable nodes to current node's children and node_list
     if instructions[0]:
-        up_node = Node(move_zero(node.val, 0, -1))
+        up_node = Node(move_zero(node.val, 0, -1), node.depth+1)
         node_list.append(up_node)
         node.children.append(up_node)
     if instructions[1]:
-        down_node = Node(move_zero(node.val, 0, 1))
+        down_node = Node(move_zero(node.val, 0, 1), node.depth+1)
         node_list.append(down_node)
         node.children.append(down_node)
     if instructions[2]:
-        left_node = Node(move_zero(node.val, -1, 0))
+        left_node = Node(move_zero(node.val, -1, 0), node.depth+1)
         node_list.append(left_node)
         node.children.append(left_node)
     if instructions[3]:
-        right_node = Node(move_zero(node.val, 1, 0))
+        right_node = Node(move_zero(node.val, 1, 0), node.depth+1)
         node_list.append(right_node)
         node.children.append(right_node)
 
@@ -108,7 +108,7 @@ def general_search(problem, queueing_function):
     #   node = remove_front(nodes) 
         curr_node = nodes.pop(0)
         
-        print()
+        print("Depth: " + str(curr_node.depth))
         for row in curr_node.val.state:
             print(row)
 
