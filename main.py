@@ -42,7 +42,15 @@ class Eight_Puzzle_Problem:
     def goal_test(self, sample):
         return sample.state == self.goal_state.state
 
-# def expand(node, operators)
+def expand(node, operators):
+    instructions = []
+    node_list = []
+    for func in operators:
+        instructions.append(func(operators, node.val))
+
+    # if instructions[0]:
+        
+        
 
 # def uniform_cost_search(nodes, expand_function)
 
@@ -61,12 +69,11 @@ def general_search(problem, queueing_function):
         if problem.goal_test(curr_node.val):
             return curr_node.val.state
     #   nodes = queuing_function(nodes, EXPAND(node, problem.OPERATORS))
+        nodes = queueing_function(nodes, expand(node, problem.operators))
     # end
 
 
 problem = Eight_Puzzle_Problem()
 test_board = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
-print(general_search(problem, None))
-# print(problem.operators[3](problem,test_board))
-for func in problem.operators:
-    print(func(problem, test_board))
+test_node = Node(test_board)
+expand(test_node, problem.operators)
