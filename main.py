@@ -12,6 +12,11 @@ class Eight_Puzzle_Problem:
     goal_state = [[1,2,3],[4,5,6],[7,8,0]]
     def goal_test(self, sample):
         return sample == self.goal_state
+
+def hit
+
+def uniform_cost_search(nodes, expand_function)
+
     
 def general_search(problem, queueing_function):
     # nodes = make_queue(make_node(problem.initial_state))
@@ -26,7 +31,8 @@ def general_search(problem, queueing_function):
     #   if problem.goal_test(node.state)
         if problem.goal_test(curr_node.val):
             return curr_node.val
-    #   nodes = queuing_function(nodes, EXPAND((problem.OPERATORS))
+    #   nodes = queuing_function(nodes, EXPAND(node, problem.OPERATORS))
+        nodes = 
     # end
 
 
