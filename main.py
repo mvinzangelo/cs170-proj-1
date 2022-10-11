@@ -71,6 +71,7 @@ def expand(node, operators):
     for func in operators:
         instructions.append(func(operators, node.val))
 
+    # add viable nodes to current node's children and node_list
     if instructions[0]:
         up_node = Node(move_zero(node.val, 0, -1))
         node_list.append(up_node)
@@ -91,6 +92,7 @@ def expand(node, operators):
     return node_list
 
 def uniform_cost_search(nodes, expanded_nodes):
+    # fifo
     for x in expanded_nodes:
         nodes.append(x)
     return nodes
@@ -100,7 +102,7 @@ def general_search(problem, queueing_function):
     nodes = [Node(problem.initial_state)]
     # loop do
     while nodes:
-    #       if nodes is empty then return failure
+    #   if nodes is empty then return failure
         if not nodes:
             return False
     #   node = remove_front(nodes) 
@@ -119,6 +121,4 @@ def general_search(problem, queueing_function):
 
 
 problem = Eight_Puzzle_Problem()
-test_board = Board([[1,2,3],[4,0,5],[6,7,8]], {"x": 1, "y": 1})
-test_node = Node(test_board)
-print(general_search(problem, uniform_cost_search))
+general_search(problem, uniform_cost_search)
