@@ -9,6 +9,10 @@ class Node:
 
 class Eight_Puzzle_Problem: 
     initial_state = [[1,2,3],[4,5,6],[7,8,0]]
+    goal_state = [[1,2,3],[4,5,6],[7,8,0]]
+    def goal_test(self, sample):
+        return sample == self.goal_state
+        
     
     
 
@@ -21,6 +25,9 @@ def general_search(problem, queueing_function):
     #       if problem.goal_test(node.state)
     #   nodes = queuing_function(nodes, EXPAND((problem.OPERATORS))
     # end
+    print(problem.goal_test([[1,2,2],[4,5,6],[7,8,0]]))
     
 
-general_search(Eight_Puzzle_Problem, None)
+
+problem = Eight_Puzzle_Problem()
+general_search(problem, None)
