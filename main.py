@@ -13,6 +13,7 @@ class Node:
     def __init__(self, val, depth = 0):
         self.val = val
         self.depth = depth
+        self.heuristic = 0
         self.children = []
 
 class Eight_Puzzle_Problem: 
@@ -96,6 +97,15 @@ def uniform_cost_search(nodes, expanded_nodes):
     for x in expanded_nodes:
         nodes.append(x)
     return nodes
+
+def misplaced_tile_heuristic(board):
+    goal_state = [[1,2,3],[4,5,6],[7,8,0]]
+    num_misplaced = 0
+    for i in range(0, len(board)):
+        for j in range(0, len(board[i])):
+            if board[i][j] != goal_state[i][j] and goal_state[i][j] != 0:
+                num_misplaced += 1
+    return num_misplaced
     
 def general_search(problem, queueing_function):
     # nodes = make_queue(make_node(problem.initial_state))
@@ -121,4 +131,6 @@ def general_search(problem, queueing_function):
 
 
 problem = Eight_Puzzle_Problem()
-general_search(problem, uniform_cost_search)
+# general_search(problem, uniform_cost_search)
+sample_board = [[1,0,3],[4,2,6],[7,5,8]]
+print(misplaced_tile_heuristic(sample_board))
