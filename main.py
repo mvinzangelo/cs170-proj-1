@@ -12,12 +12,16 @@ class Board:
 class Node:
     def __init__(self, val):
         self.val = val
-        self.children = [None]
+        self.children = []
 
 class Eight_Puzzle_Problem: 
-    initial_state = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
+    # initial_state = Board([[1,2,3],[4,0,5],[6,7,8]], {"x": 1, "y": 1})
+    initial_state = Board([[1,2,3],[5,0,6],[4,7,8]], {"x": 1, "y": 1})
+    # initial_state = Board([[1,2,3],[4,5,6],[7,0,8]], {"x": 1, "y": 2})
+    # initial_state = Board([[1,2,3],[4,5,6],[0,7,8]], {"x": 0, "y": 2})
     goal_state = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
 
+    # operators
     def move_up(self, board):
         if board.zero["y"] - 1 < 0:
             return False
@@ -43,9 +47,9 @@ class Eight_Puzzle_Problem:
     def goal_test(self, sample):
         return sample.state == self.goal_state.state
 
-def move_zero(node, x_addition, y_addition):
+def move_zero(board, x_addition, y_addition):
     # create a deep copy of the input node
-    new_board = copy.deepcopy(node)
+    new_board = copy.deepcopy(board)
     # store the previous x and y value
     old_x = new_board.zero["x"]
     old_y = new_board.zero["y"]
@@ -67,18 +71,29 @@ def expand(node, operators):
     for func in operators:
         instructions.append(func(operators, node.val))
 
-    print(node.val.state)
     if instructions[0]:
-        move_zero(node.val, 0, -1)
+        up_node = Node(move_zero(node.val, 0, -1))
+        node_list.append(up_node)
+        node.children.append(up_node)
     if instructions[1]:
-        move_zero(node.val, 0, 1)
+        down_node = Node(move_zero(node.val, 0, 1))
+        node_list.append(down_node)
+        node.children.append(down_node)
     if instructions[2]:
-        move_zero(node.val, -1, 0)
+        left_node = Node(move_zero(node.val, -1, 0))
+        node_list.append(left_node)
+        node.children.append(left_node)
     if instructions[3]:
-        move_zero(node.val, 1, 0)
+        right_node = Node(move_zero(node.val, 1, 0))
+        node_list.append(right_node)
+        node.children.append(right_node)
 
-# def uniform_cost_search(nodes, expand_function)
+    return node_list
 
+def uniform_cost_search(nodes, expanded_nodes):
+    for x in expanded_nodes:
+        nodes.append(x)
+    return nodes
     
 def general_search(problem, queueing_function):
     # nodes = make_queue(make_node(problem.initial_state))
@@ -90,15 +105,20 @@ def general_search(problem, queueing_function):
             return False
     #   node = remove_front(nodes) 
         curr_node = nodes.pop(0)
+        
+        print()
+        for row in curr_node.val.state:
+            print(row)
+
     #   if problem.goal_test(node.state)
         if problem.goal_test(curr_node.val):
             return curr_node.val.state
     #   nodes = queuing_function(nodes, EXPAND(node, problem.OPERATORS))
-        nodes = queueing_function(nodes, expand(node, problem.operators))
+        nodes = queueing_function(nodes, expand(curr_node, problem.operators))
     # end
 
 
 problem = Eight_Puzzle_Problem()
-test_board = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
+test_board = Board([[1,2,3],[4,0,5],[6,7,8]], {"x": 1, "y": 1})
 test_node = Node(test_board)
-expand(test_node, problem.operators)
+print(general_search(problem, uniform_cost_search))
