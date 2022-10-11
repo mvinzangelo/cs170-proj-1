@@ -12,23 +12,23 @@ class Eight_Puzzle_Problem:
     goal_state = [[1,2,3],[4,5,6],[7,8,0]]
     def goal_test(self, sample):
         return sample == self.goal_state
-        
-    
-    
-
     
 def general_search(problem, queueing_function):
     # nodes = make_queue(make_node(problem.initial_state))
     nodes = [Node(problem.initial_state)]
     # loop do
+    while nodes:
     #       if nodes is empty then return failure
+        if not nodes:
+            return False
     #   node = remove_front(nodes) 
-    #       if problem.goal_test(node.state)
+        curr_node = nodes.pop(0)
+    #   if problem.goal_test(node.state)
+        if problem.goal_test(curr_node.val):
+            return curr_node.val
     #   nodes = queuing_function(nodes, EXPAND((problem.OPERATORS))
     # end
-    print(nodes[0].val)
-    
 
 
 problem = Eight_Puzzle_Problem()
-general_search(problem, None)
+print(general_search(problem, None))
