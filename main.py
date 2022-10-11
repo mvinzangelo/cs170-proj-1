@@ -6,6 +6,7 @@ class Board:
     def __init__(self, state, zero):
         self.state = state
         self.zero = zero
+        self.n = 3
 
 class Node:
     def __init__(self, val):
@@ -15,6 +16,29 @@ class Node:
 class Eight_Puzzle_Problem: 
     initial_state = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
     goal_state = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
+
+    def move_up(self, board):
+        if board.zero["y"] - 1 < 0:
+            return False
+        else:
+            return True
+    def move_down(self, board):
+        if board.zero["y"] + 1 >= board.n:
+            return False
+        else:
+            return True
+    def move_left(self, board):
+        if board.zero["x"] - 1 < 0: 
+            return False
+        else:
+            return True
+    def move_right(self, board):
+        if board.zero["x"] + 1 >= board.n: 
+            return False
+        else:
+            return True
+    operators = [move_up, move_down, move_left, move_right]
+
     def goal_test(self, sample):
         return sample.state == self.goal_state.state
 
@@ -41,4 +65,8 @@ def general_search(problem, queueing_function):
 
 
 problem = Eight_Puzzle_Problem()
+test_board = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
 print(general_search(problem, None))
+# print(problem.operators[3](problem,test_board))
+for func in problem.operators:
+    print(func(problem, test_board))
