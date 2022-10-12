@@ -19,9 +19,9 @@ class Node:
         return self.a_star_val < other.a_star_val
 
 class Eight_Puzzle_Problem: 
-    # initial_state = Board([[1,2,3],[4,5,6],[0,7,8]], {"x": 0, "y": 2})
+    initial_state = Board([[1,2,3],[4,5,6],[0,7,8]], {"x": 0, "y": 2})
     # initial_state = Board([[1,3,6],[5,0,2],[4,7,8]], {"x": 1, "y": 1})
-    initial_state = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
+    # initial_state = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
     # initial_state = Board([[0,7,2],[4,6,1],[3,5,8]], {"x": 0, "y": 0})
     goal_state = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
 
@@ -95,11 +95,8 @@ def expand(node, operators):
 
     return node_list
 
-def uniform_cost_search(nodes, expanded_nodes):
-    # fifo
-    for x in expanded_nodes:
-        nodes.append(x)
-    return nodes
+def uniform_cost_heuristic(board):
+    return 0
 
 def misplaced_tile_heuristic(board):
     goal_state = [[1,2,3],[4,5,6],[7,8,0]]
@@ -109,14 +106,6 @@ def misplaced_tile_heuristic(board):
             if board[i][j] != goal_state[i][j] and goal_state[i][j] != 0:
                 num_misplaced += 1
     return num_misplaced
-
-def misplaced_tile_heuristic_enqueue(nodes, expanded_nodes):
-    for x in expanded_nodes:
-        # calculate a* value
-        x.a_star_val = misplaced_tile_heuristic(x.val.state) + x.depth
-        # push node into heap
-        heappush(nodes, x)
-    return nodes
 
 def manhattan_distance_heuristic(board):
     # hashmap for goal positions
@@ -139,23 +128,15 @@ def manhattan_distance_heuristic(board):
                 manhattan_distance += abs(goal_positions[board[i][j]]["y"] - i)
     return manhattan_distance
 
-def a_star_enqueue(nodes, expanded_nodes, heuristic):
-    for x in expanded_nodes:
-        # calculate a* value
-        x.a_star_val = heuristic(x.val.state) + x.depth
-        # push node into heap
-        heappush(nodes, x)
-    return nodes
-
-    
-
-def manhattan_distance_heuristic_enqueue(nodes, expanded_nodes):
-    for x in expanded_nodes:
-        # calculate a* value
-        x.a_star_val = manhattan_distance_heuristic(x.val.state) + x.depth
-        # push node into heap
-        heappush(nodes, x)
-    return nodes
+def a_star_enqueue(heuristic):
+    def queueing_function(nodes, expanded_nodes):
+        for x in expanded_nodes:
+            # calculate a* value
+            x.a_star_val = heuristic(x.val.state) + x.depth
+            # push node into heap
+            heappush(nodes, x)
+        return nodes
+    return queueing_function
 
 def general_search(problem, queueing_function):
     # nodes = make_queue(make_node(problem.initial_state))
@@ -168,9 +149,9 @@ def general_search(problem, queueing_function):
         # node = remove_front(nodes) 
         curr_node = nodes.pop(0)
         
-        # print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
-        # for row in curr_node.val.state:
-        #     print(row)
+        print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
+        for row in curr_node.val.state:
+            print(row)
 
         # if problem.goal_test(node.state)
         if problem.goal_test(curr_node.val):
@@ -179,6 +160,9 @@ def general_search(problem, queueing_function):
         nodes = queueing_function(nodes, expand(curr_node, problem.operators))
     # end
 
+misplaced_tile_heuristic_enqueue = a_star_enqueue(misplaced_tile_heuristic)
+manhattan_distance_heuristic_enqueue = a_star_enqueue(manhattan_distance_heuristic)
+uniform_cost_enqueue = a_star_enqueue(uniform_cost_heuristic)
 problem = Eight_Puzzle_Problem()
 depth_0_board = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
 depth_4_board = Board([[1,2,3],[5,0,6],[4,7,8]], {"x": 1, "y": 1})
@@ -188,7 +172,7 @@ depth_16_board = Board([[1,6,7],[5,0,3],[4,8,2]], {"x": 1, "y": 1})
 depth_20_board = Board([[7,1,2],[4,8,5],[6,3,0]], {"x": 2, "y": 2})
 depth_24_board = Board([[0,7,2],[4,6,1],[3,5,8]], {"x": 0, "y": 0})
 start_time = time.time()
-# general_search(problem, uniform_cost_search)
+general_search(problem, uniform_cost_search)
 # general_search(problem, misplaced_tile_heuristic_enqueue)
-general_search(problem, manhattan_distance_heuristic_enqueue)
+# general_search(problem, manhattan_distance_heuristic_enqueue)
 print("--- %s seconds ---" % (time.time() - start_time))
