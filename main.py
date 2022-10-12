@@ -120,6 +120,36 @@ def misplaced_tile_heuristic_enqueue(nodes, expanded_nodes):
         heappush(nodes, x)
     return nodes
 
+def manhattan_distance_heuristic(board):
+    # hashmap for goal positions
+    goal_positions = {
+        1: {"x": 0, "y": 0},
+        2: {"x": 1, "y": 0},
+        3: {"x": 2, "y": 0},
+        4: {"x": 0, "y": 1},
+        5: {"x": 1, "y": 1},
+        6: {"x": 2, "y": 1},
+        7: {"x": 0, "y": 2},
+        8: {"x": 1, "y": 2},
+    }
+    manhattan_distance = 0
+    for i in range(0, len(board)):
+        for j in range(0, len(board[i])):
+            # find the difference between where the number should be currently and where it currently is
+            if board[i][j] != 0 and goal_positions[board[i][j]] != {"x": j, "y": i}:
+                manhattan_distance += abs(goal_positions[board[i][j]]["x"] - j)
+                manhattan_distance += abs(goal_positions[board[i][j]]["y"] - i)
+    return manhattan_distance
+    
+
+def manhattan_distance_heuristic_enqueue(nodes, expanded_nodes):
+    for x in expanded_nodes:
+        # calculate a* value
+        x.a_star_val = manhattan_distance_heuristic(x.val.state) + x.depth
+        # push node into heap
+        heappush(nodes, x)
+    return nodes
+
 def general_search(problem, queueing_function):
     # nodes = make_queue(make_node(problem.initial_state))
     nodes = [Node(problem.initial_state)]
@@ -144,7 +174,8 @@ def general_search(problem, queueing_function):
 
 
 problem = Eight_Puzzle_Problem()
-general_search(problem, misplaced_tile_heuristic_enqueue)
+# general_search(problem, misplaced_tile_heuristic_enqueue)
 # general_search(problem, uniform_cost_search)
 
-sample_board = [[1,0,3],[4,2,6],[7,5,8]]
+sample_board = [[3,2,8],[4,5,6],[7,1,0]]
+print(manhattan_distance_heuristic(sample_board))
