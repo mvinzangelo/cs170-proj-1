@@ -138,6 +138,15 @@ def manhattan_distance_heuristic(board):
                 manhattan_distance += abs(goal_positions[board[i][j]]["x"] - j)
                 manhattan_distance += abs(goal_positions[board[i][j]]["y"] - i)
     return manhattan_distance
+
+def a_star_enqueue(nodes, expanded_nodes, heuristic):
+    for x in expanded_nodes:
+        # calculate a* value
+        x.a_star_val = heuristic(x.val.state) + x.depth
+        # push node into heap
+        heappush(nodes, x)
+    return nodes
+
     
 
 def manhattan_distance_heuristic_enqueue(nodes, expanded_nodes):
@@ -159,9 +168,9 @@ def general_search(problem, queueing_function):
         # node = remove_front(nodes) 
         curr_node = nodes.pop(0)
         
-        print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
-        for row in curr_node.val.state:
-            print(row)
+        # print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
+        # for row in curr_node.val.state:
+        #     print(row)
 
         # if problem.goal_test(node.state)
         if problem.goal_test(curr_node.val):
@@ -170,9 +179,16 @@ def general_search(problem, queueing_function):
         nodes = queueing_function(nodes, expand(curr_node, problem.operators))
     # end
 
-start_time = time.time()
 problem = Eight_Puzzle_Problem()
-general_search(problem, uniform_cost_search)
+depth_0_board = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
+depth_4_board = Board([[1,2,3],[5,0,6],[4,7,8]], {"x": 1, "y": 1})
+depth_8_board = Board([[1,3,6],[5,0,2],[4,7,8]], {"x": 1, "y": 1})
+depth_12_board = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
+depth_16_board = Board([[1,6,7],[5,0,3],[4,8,2]], {"x": 1, "y": 1})
+depth_20_board = Board([[7,1,2],[4,8,5],[6,3,0]], {"x": 2, "y": 2})
+depth_24_board = Board([[0,7,2],[4,6,1],[3,5,8]], {"x": 0, "y": 0})
+start_time = time.time()
+# general_search(problem, uniform_cost_search)
 # general_search(problem, misplaced_tile_heuristic_enqueue)
-# general_search(problem, manhattan_distance_heuristic_enqueue)
+general_search(problem, manhattan_distance_heuristic_enqueue)
 print("--- %s seconds ---" % (time.time() - start_time))
