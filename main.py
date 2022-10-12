@@ -1,10 +1,6 @@
 import copy
 from heapq import heapify, heappush, heappop
 
-# KEY POINTS: 
-# - make sure to keep code general (can solve multiple n's for 8 puzzle)
-# - make can put any inital state
-
 class Board:
     def __init__(self, state, zero):
         self.state = state
@@ -22,9 +18,10 @@ class Node:
         return self.a_star_val < other.a_star_val
 
 class Eight_Puzzle_Problem: 
-    initial_state = Board([[1,2,3],[4,5,6],[0,7,8]], {"x": 0, "y": 2})
+    # initial_state = Board([[1,2,3],[4,5,6],[0,7,8]], {"x": 0, "y": 2})
     # initial_state = Board([[1,3,6],[5,0,2],[4,7,8]], {"x": 1, "y": 1})
     # initial_state = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
+    initial_state = Board([[0,7,2],[4,6,1],[3,5,8]], {"x": 0, "y": 0})
     goal_state = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
 
     # operators
@@ -155,27 +152,25 @@ def general_search(problem, queueing_function):
     nodes = [Node(problem.initial_state)]
     # loop do
     while nodes:
-    #   if nodes is empty then return failure
+        # if nodes is empty then return failure
         if not nodes:
             return False
-    #   node = remove_front(nodes) 
+        # node = remove_front(nodes) 
         curr_node = nodes.pop(0)
         
         print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
         for row in curr_node.val.state:
             print(row)
 
-    #   if problem.goal_test(node.state)
+        # if problem.goal_test(node.state)
         if problem.goal_test(curr_node.val):
             return curr_node.val.state
-    #   nodes = queuing_function(nodes, EXPAND(node, problem.OPERATORS))
+        # nodes = queuing_function(nodes, EXPAND(node, problem.OPERATORS))
         nodes = queueing_function(nodes, expand(curr_node, problem.operators))
     # end
 
 
 problem = Eight_Puzzle_Problem()
-# general_search(problem, misplaced_tile_heuristic_enqueue)
 # general_search(problem, uniform_cost_search)
-
-sample_board = [[3,2,8],[4,5,6],[7,1,0]]
-print(manhattan_distance_heuristic(sample_board))
+# general_search(problem, misplaced_tile_heuristic_enqueue)
+general_search(problem, manhattan_distance_heuristic_enqueue)
