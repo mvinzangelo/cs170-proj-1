@@ -1,3 +1,4 @@
+import time
 import copy
 from heapq import heapify, heappush, heappop
 
@@ -20,8 +21,8 @@ class Node:
 class Eight_Puzzle_Problem: 
     # initial_state = Board([[1,2,3],[4,5,6],[0,7,8]], {"x": 0, "y": 2})
     # initial_state = Board([[1,3,6],[5,0,2],[4,7,8]], {"x": 1, "y": 1})
-    # initial_state = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
-    initial_state = Board([[0,7,2],[4,6,1],[3,5,8]], {"x": 0, "y": 0})
+    initial_state = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
+    # initial_state = Board([[0,7,2],[4,6,1],[3,5,8]], {"x": 0, "y": 0})
     goal_state = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
 
     # operators
@@ -169,8 +170,9 @@ def general_search(problem, queueing_function):
         nodes = queueing_function(nodes, expand(curr_node, problem.operators))
     # end
 
-
+start_time = time.time()
 problem = Eight_Puzzle_Problem()
-# general_search(problem, uniform_cost_search)
+general_search(problem, uniform_cost_search)
 # general_search(problem, misplaced_tile_heuristic_enqueue)
-general_search(problem, manhattan_distance_heuristic_enqueue)
+# general_search(problem, manhattan_distance_heuristic_enqueue)
+print("--- %s seconds ---" % (time.time() - start_time))
