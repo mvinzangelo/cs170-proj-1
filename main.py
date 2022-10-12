@@ -1,4 +1,6 @@
 import copy
+from heapq import heapify, heappush, heappop
+
 # KEY POINTS: 
 # - make sure to keep code general (can solve multiple n's for 8 puzzle)
 # - make can put any inital state
@@ -13,13 +15,16 @@ class Node:
     def __init__(self, val, depth = 0):
         self.val = val
         self.depth = depth
-        self.heuristic = 0
+        self.a_star_val = 0
         self.children = []
 
+    def __lt__(self, other):
+        return self.a_star_val < other.a_star_val
+
 class Eight_Puzzle_Problem: 
-    # initial_state = Board([[1,2,3],[4,5,6],[0,7,8]], {"x": 0, "y": 2})
+    initial_state = Board([[1,2,3],[4,5,6],[0,7,8]], {"x": 0, "y": 2})
     # initial_state = Board([[1,3,6],[5,0,2],[4,7,8]], {"x": 1, "y": 1})
-    initial_state = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
+    # initial_state = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
     goal_state = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
 
     # operators
@@ -106,7 +111,15 @@ def misplaced_tile_heuristic(board):
             if board[i][j] != goal_state[i][j] and goal_state[i][j] != 0:
                 num_misplaced += 1
     return num_misplaced
-    
+
+def misplaced_tile_heuristic_enqueue(nodes, expanded_nodes):
+    for x in expanded_nodes:
+        # calculate a* value
+        x.a_star_val = misplaced_tile_heuristic(x.val.state) + x.depth
+        # push node into heap
+        heappush(nodes, x)
+    return nodes
+
 def general_search(problem, queueing_function):
     # nodes = make_queue(make_node(problem.initial_state))
     nodes = [Node(problem.initial_state)]
@@ -118,7 +131,7 @@ def general_search(problem, queueing_function):
     #   node = remove_front(nodes) 
         curr_node = nodes.pop(0)
         
-        print("Depth: " + str(curr_node.depth))
+        print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
         for row in curr_node.val.state:
             print(row)
 
@@ -131,6 +144,7 @@ def general_search(problem, queueing_function):
 
 
 problem = Eight_Puzzle_Problem()
+general_search(problem, misplaced_tile_heuristic_enqueue)
 # general_search(problem, uniform_cost_search)
+
 sample_board = [[1,0,3],[4,2,6],[7,5,8]]
-print(misplaced_tile_heuristic(sample_board))
