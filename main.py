@@ -20,9 +20,6 @@ class Node:
 
 class Eight_Puzzle_Problem: 
     initial_state = Board([[1,2,3],[4,5,6],[0,7,8]], {"x": 0, "y": 2})
-    # initial_state = Board([[1,3,6],[5,0,2],[4,7,8]], {"x": 1, "y": 1})
-    # initial_state = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
-    # initial_state = Board([[0,7,2],[4,6,1],[3,5,8]], {"x": 0, "y": 0})
     goal_state = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
 
     # operators
@@ -103,6 +100,7 @@ def misplaced_tile_heuristic(board):
     num_misplaced = 0
     for i in range(0, len(board)):
         for j in range(0, len(board[i])):
+            # if the current tile is misplaced and is not 0, add 1 to the heuristic
             if board[i][j] != goal_state[i][j] and goal_state[i][j] != 0:
                 num_misplaced += 1
     return num_misplaced
@@ -155,15 +153,12 @@ def general_search(problem, queueing_function):
 
         # if problem.goal_test(node.state)
         if problem.goal_test(curr_node.val):
-            return curr_node.val.state
+            return curr_node
         # nodes = queuing_function(nodes, EXPAND(node, problem.OPERATORS))
         nodes = queueing_function(nodes, expand(curr_node, problem.operators))
     # end
 
-misplaced_tile_heuristic_enqueue = a_star_enqueue(misplaced_tile_heuristic)
-manhattan_distance_heuristic_enqueue = a_star_enqueue(manhattan_distance_heuristic)
-uniform_cost_enqueue = a_star_enqueue(uniform_cost_heuristic)
-problem = Eight_Puzzle_Problem()
+# test cases
 depth_0_board = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
 depth_4_board = Board([[1,2,3],[5,0,6],[4,7,8]], {"x": 1, "y": 1})
 depth_8_board = Board([[1,3,6],[5,0,2],[4,7,8]], {"x": 1, "y": 1})
@@ -171,8 +166,53 @@ depth_12_board = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
 depth_16_board = Board([[1,6,7],[5,0,3],[4,8,2]], {"x": 1, "y": 1})
 depth_20_board = Board([[7,1,2],[4,8,5],[6,3,0]], {"x": 2, "y": 2})
 depth_24_board = Board([[0,7,2],[4,6,1],[3,5,8]], {"x": 0, "y": 0})
-start_time = time.time()
-general_search(problem, uniform_cost_search)
-# general_search(problem, misplaced_tile_heuristic_enqueue)
-# general_search(problem, manhattan_distance_heuristic_enqueue)
-print("--- %s seconds ---" % (time.time() - start_time))
+test_cases = {
+    0: depth_0_board,
+    4: depth_4_board,
+    8: depth_8_board,
+    12: depth_12_board,
+    16: depth_16_board,
+    20: depth_20_board,
+    24: depth_24_board,
+}
+
+# enqueuing functions
+misplaced_tile_heuristic_enqueue = a_star_enqueue(misplaced_tile_heuristic)
+manhattan_distance_heuristic_enqueue = a_star_enqueue(manhattan_distance_heuristic)
+uniform_cost_enqueue = a_star_enqueue(uniform_cost_heuristic)
+
+problem = Eight_Puzzle_Problem()
+
+# driver code
+def main():
+    board_is_unique = input("Would you like a unique board? (y/N): ")
+    if board_is_unique.lower() == "n" or board_is_unique == "":
+        board_number = input("Which board depth testcase would you like to test? (Enter 0, 4, 8, 12, 16, 20 or 24): ")
+        problem.initial_state = test_cases[int(board_number)]
+    elif board_is_unique.lower() == "y":
+        tmp_list = []
+        print("Enter the board by row. Do not use any delimiting characters. Use a 0 to signify the empty block.")
+        for i in range(0,3):
+            tmp_list.append(input("Row " + str(i + 1) + ": "))
+        board_state = [list(row) for row in tmp_list]
+        board_zeros = None
+        # find zero
+        for i in range(3):
+            for j in range(3):
+                if board_state[i][j] == '0':
+                    board_zeros = {"x": j, "y": i}
+        # translate into ints
+        board_state = [list(map(int, i)) for i in board_state]
+        problem.initial_state = Board(board_state, board_zeros)
+    heuristic = input("Which heuristic would you like to use?\n1 - Uniform Cost\n2 - Misplaced Tile\n3 - Manhattan Distance\nYour choice: ")
+    start_time = time.time()
+    if heuristic == '1':
+        general_search(problem, uniform_cost_enqueue)
+    elif heuristic == '2': 
+        general_search(problem, misplaced_tile_heuristic_enqueue)
+    elif heuristic == '3':
+        general_search(problem, manhattan_distance_heuristic_enqueue)
+    print("--- %s seconds ---" % (time.time() - start_time))
+
+if __name__ == "__main__":
+    main()
