@@ -137,6 +137,11 @@ def a_star_enqueue(heuristic):
     return queueing_function
 
 def general_search(problem, queueing_function):
+    # ? benchmark code
+    start_time = time.time()
+    num_nodes = 0
+    max_queue_size = 0
+
     # nodes = make_queue(make_node(problem.initial_state))
     nodes = [Node(problem.initial_state)]
     # loop do
@@ -147,12 +152,23 @@ def general_search(problem, queueing_function):
         # node = remove_front(nodes) 
         curr_node = nodes.pop(0)
         
+        # ? increase nodes expanded count
+        num_nodes += 1
+        
+        # ? print current node
         print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
         for row in curr_node.val.state:
             print(row)
 
+        # ? update max queue size
+        if len(nodes) >= max_queue_size:
+            max_queue_size = len(nodes)
+
         # if problem.goal_test(node.state)
         if problem.goal_test(curr_node.val):
+            print("Number of nodes expanded: " + str(num_nodes))
+            print("Max queue size: " + str(max_queue_size))
+            print("Time: %s seconds" % (time.time() - start_time))
             return curr_node
         # nodes = queuing_function(nodes, EXPAND(node, problem.OPERATORS))
         nodes = queueing_function(nodes, expand(curr_node, problem.operators))
@@ -205,14 +221,12 @@ def main():
         board_state = [list(map(int, i)) for i in board_state]
         problem.initial_state = Board(board_state, board_zeros)
     heuristic = input("Which heuristic would you like to use?\n1 - Uniform Cost\n2 - Misplaced Tile\n3 - Manhattan Distance\nYour choice: ")
-    start_time = time.time()
     if heuristic == '1':
         general_search(problem, uniform_cost_enqueue)
     elif heuristic == '2': 
         general_search(problem, misplaced_tile_heuristic_enqueue)
     elif heuristic == '3':
         general_search(problem, manhattan_distance_heuristic_enqueue)
-    print("--- %s seconds ---" % (time.time() - start_time))
 
 if __name__ == "__main__":
     main()
