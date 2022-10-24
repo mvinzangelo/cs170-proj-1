@@ -155,10 +155,10 @@ def general_search(problem, queueing_function):
         # ? increase nodes expanded count
         num_nodes += 1
         
-        # ? print current node
-        print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
-        for row in curr_node.val.state:
-            print(row)
+        # # ? print current node
+        # print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
+        # for row in curr_node.val.state:
+        #     print(row)
 
         # ? update max queue size
         if len(nodes) >= max_queue_size:
@@ -176,6 +176,7 @@ def general_search(problem, queueing_function):
 
 # test cases
 depth_0_board = Board([[1,2,3],[4,5,6],[7,8,0]], {"x": 2, "y": 2})
+depth_2_board = Board([[1,2,3],[4,5,6],[0,7,8]], {"x": 0, "y": 2})
 depth_4_board = Board([[1,2,3],[5,0,6],[4,7,8]], {"x": 1, "y": 1})
 depth_8_board = Board([[1,3,6],[5,0,2],[4,7,8]], {"x": 1, "y": 1})
 depth_12_board = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
@@ -184,6 +185,7 @@ depth_20_board = Board([[7,1,2],[4,8,5],[6,3,0]], {"x": 2, "y": 2})
 depth_24_board = Board([[0,7,2],[4,6,1],[3,5,8]], {"x": 0, "y": 0})
 test_cases = {
     0: depth_0_board,
+    2: depth_2_board,
     4: depth_4_board,
     8: depth_8_board,
     12: depth_12_board,
@@ -203,7 +205,7 @@ problem = Eight_Puzzle_Problem()
 def main():
     board_is_unique = input("Would you like a unique board? (y/N): ")
     if board_is_unique.lower() == "n" or board_is_unique == "":
-        board_number = input("Which board depth testcase would you like to test? (Enter 0, 4, 8, 12, 16, 20 or 24): ")
+        board_number = input("Which board depth testcase would you like to test? (Enter 0, 2, 4, 8, 12, 16, 20 or 24): ")
         problem.initial_state = test_cases[int(board_number)]
     elif board_is_unique.lower() == "y":
         tmp_list = []
