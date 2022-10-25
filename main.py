@@ -141,6 +141,7 @@ def general_search(problem, queueing_function):
     start_time = time.time()
     num_nodes = 0
     max_queue_size = 0
+    expanded_nodes = []
 
     # nodes = make_queue(make_node(problem.initial_state))
     nodes = [Node(problem.initial_state)]
@@ -171,7 +172,9 @@ def general_search(problem, queueing_function):
             print("Time: %s seconds" % (time.time() - start_time))
             return curr_node
         # nodes = queuing_function(nodes, EXPAND(node, problem.OPERATORS))
-        nodes = queueing_function(nodes, expand(curr_node, problem.operators))
+        if curr_node.val.state not in expanded_nodes: 
+            nodes = queueing_function(nodes, expand(curr_node, problem.operators))
+            expanded_nodes.append(copy.deepcopy(curr_node.val.state))
     # end
 
 # test cases
