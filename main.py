@@ -162,8 +162,7 @@ def general_search(problem, queueing_function):
         #     print(row)
 
         # ? update max queue size
-        if len(nodes) >= max_queue_size:
-            max_queue_size = len(nodes)
+        max_queue_size = max(len(nodes), max_queue_size)
 
         # if problem.goal_test(node.state)
         if problem.goal_test(curr_node.val):
