@@ -156,10 +156,10 @@ def general_search(problem, queueing_function):
         # ? increase nodes expanded count
         num_nodes += 1
         
-        # # ? print current node
-        print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
-        for row in curr_node.val.state:
-            print(row)
+        # # # ? print current node
+        # print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
+        # for row in curr_node.val.state:
+        #     print(row)
 
         # ? update max queue size
         if len(nodes) >= max_queue_size:
@@ -198,6 +198,7 @@ test_cases = {
     16: depth_16_board,
     20: depth_20_board,
     24: depth_24_board,
+    31: depth_31_board,
 }
 
 # enqueuing functions
@@ -211,7 +212,7 @@ problem = Eight_Puzzle_Problem()
 def main():
     board_is_unique = input("Would you like a unique board? (y/N): ")
     if board_is_unique.lower() == "n" or board_is_unique == "":
-        board_number = input("Which board depth testcase would you like to test? (Enter 0, 2, 4, 8, 12, 16, 20 or 24): ")
+        board_number = input("Which board depth testcase would you like to test? (Enter 0, 2, 4, 8, 12, 16, 20, 24 or 31): ")
         problem.initial_state = test_cases[int(board_number)]
     elif board_is_unique.lower() == "y":
         tmp_list = []
