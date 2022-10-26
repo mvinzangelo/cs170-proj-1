@@ -157,9 +157,9 @@ def general_search(problem, queueing_function):
         num_nodes += 1
         
         # # ? print current node
-        # print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
-        # for row in curr_node.val.state:
-        #     print(row)
+        print("Depth: " + str(curr_node.depth) + " | A*: " + str(curr_node.a_star_val))
+        for row in curr_node.val.state:
+            print(row)
 
         # ? update max queue size
         if len(nodes) >= max_queue_size:
@@ -167,6 +167,7 @@ def general_search(problem, queueing_function):
 
         # if problem.goal_test(node.state)
         if problem.goal_test(curr_node.val):
+            print("Depth of solution: " + str(curr_node.depth))
             print("Number of nodes expanded: " + str(num_nodes))
             print("Max queue size: " + str(max_queue_size))
             print("Time: %s seconds" % (time.time() - start_time))
@@ -186,6 +187,8 @@ depth_12_board = Board([[1,3,6],[5,0,7],[4,8,2]], {"x": 1, "y": 1})
 depth_16_board = Board([[1,6,7],[5,0,3],[4,8,2]], {"x": 1, "y": 1})
 depth_20_board = Board([[7,1,2],[4,8,5],[6,3,0]], {"x": 2, "y": 2})
 depth_24_board = Board([[0,7,2],[4,6,1],[3,5,8]], {"x": 0, "y": 0})
+depth_31_board = Board([[8,6,7],[2,5,4],[3,0,1]], {"x": 1, "y": 2})
+
 test_cases = {
     0: depth_0_board,
     2: depth_2_board,
