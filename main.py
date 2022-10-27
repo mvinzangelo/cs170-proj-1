@@ -171,8 +171,9 @@ def general_search(problem, queueing_function):
             print("Max queue size: " + str(max_queue_size))
             print("Time: %s seconds" % (time.time() - start_time))
             return curr_node
-        # nodes = queuing_function(nodes, EXPAND(node, problem.OPERATORS))
+        # check if current node hasn't been expanded already
         if curr_node.val.state not in expanded_nodes: 
+            # nodes = queuing_function(nodes, EXPAND(node, problem.OPERATORS))
             nodes = queueing_function(nodes, expand(curr_node, problem.operators))
             expanded_nodes.append(copy.deepcopy(curr_node.val.state))
     # end
